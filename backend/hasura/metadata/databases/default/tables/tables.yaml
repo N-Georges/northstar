@@ -1,0 +1,4 @@
+- "!include public_applicant.yaml"
+- "!include public_company.yaml"
+- "!include public_company_administrator.yaml"
+- "!include public_users.yaml"

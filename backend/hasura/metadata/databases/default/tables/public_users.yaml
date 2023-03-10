@@ -1,0 +1,25 @@
+table:
+  name: users
+  schema: public
+array_relationships:
+  - name: applicants
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: applicant
+          schema: public
+  - name: companies
+    using:
+      foreign_key_constraint_on:
+        column: admin_id
+        table:
+          name: company
+          schema: public
+  - name: company_administrators
+    using:
+      foreign_key_constraint_on:
+        column: user_id
+        table:
+          name: company_administrator
+          schema: public

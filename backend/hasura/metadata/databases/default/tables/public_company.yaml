@@ -1,0 +1,15 @@
+table:
+  name: company
+  schema: public
+object_relationships:
+  - name: user
+    using:
+      foreign_key_constraint_on: admin_id
+array_relationships:
+  - name: company_administrators
+    using:
+      foreign_key_constraint_on:
+        column: company_id
+        table:
+          name: company_administrator
+          schema: public
