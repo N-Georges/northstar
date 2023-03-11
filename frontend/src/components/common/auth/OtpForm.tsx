@@ -1,18 +1,18 @@
-import { useSignIn } from "@clerk/nextjs";
+import { useSignUp } from "@clerk/nextjs";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { EmailCodeFactor } from "@clerk/types";
-import VerifyOtpNotice from "@/components/common/auth/VerifyOtpNotice";
-import { APIResponseError, parseError } from "@/utils/errors";
-import Loading from "@/components/common/Loading";
+import { APIResponseError, parseError } from "../../../utils/errors";
+import Loading from "../Loading";
+import VerifyOtpNotice from "./VerifyOtpNotice";
 
-type SignInOtpProps = {
+const OtpForm = ({
+  emailAddress,
+  onDone,
+}: {
   emailAddress: string;
   onDone: (sessionId: string) => void;
-};
-
-const SignInOtp = ({ emailAddress, onDone }: SignInOtpProps) => {
-  const { isLoaded, signIn } = useSignIn();
+}) => {
+  const { isLoaded, signUp } = useSignUp();
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -26,17 +26,17 @@ const SignInOtp = ({ emailAddress, onDone }: SignInOtpProps) => {
     return null;
   }
 
-  const verifySignInOtp: SubmitHandler<{ code: string }> = async function ({
+  const verifyOtpCode: SubmitHandler<{ code: string }> = async function ({
     code,
   }) {
     try {
       setIsLoading(true);
-      const signInAttempt = await signIn.attemptFirstFactor({
-        strategy: "email_code",
+      const signUpAttempt = await signUp.attemptEmailAddressVerification({
         code,
       });
-      if (signInAttempt.status === "complete") {
-        onDone(signInAttempt.createdSessionId || "");
+
+      if (signUpAttempt.status === "complete") {
+        onDone(signUpAttempt.createdSessionId || "");
       }
     } catch (err) {
       setError("code", {
@@ -48,19 +48,12 @@ const SignInOtp = ({ emailAddress, onDone }: SignInOtpProps) => {
     }
   };
 
-  const resendSignInOtp = async function () {
-    const emailCodeFactor = signIn.supportedFirstFactors.find(
-      (factor) => factor.strategy === "email_code"
-    ) as EmailCodeFactor;
-
-    await signIn.prepareFirstFactor({
-      strategy: "email_code",
-      emailAddressId: emailCodeFactor.emailAddressId,
-    });
+  const resendOtpCode = async function () {
+    await signUp.prepareEmailAddressVerification();
   };
 
   return (
-    <form onSubmit={handleSubmit(verifySignInOtp)} className="space-y-5">
+    <form onSubmit={handleSubmit(verifyOtpCode)} className="space-y-5 pt-10">
       <div>
         <div className="flex flex-col space-y-2">
           <div className="text-2xl font-semibold text-gray-700 md:text-3xl">
@@ -68,7 +61,7 @@ const SignInOtp = ({ emailAddress, onDone }: SignInOtpProps) => {
           </div>
           <VerifyOtpNotice
             emailAddress={emailAddress}
-            onResendClick={resendSignInOtp}
+            onResendClick={resendOtpCode}
           />
         </div>
       </div>
@@ -87,6 +80,7 @@ const SignInOtp = ({ emailAddress, onDone }: SignInOtpProps) => {
               type="text"
               id="otp"
               {...register("code")}
+              autoFocus
               className="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
             />
             {errors.code && (
@@ -113,4 +107,4 @@ const SignInOtp = ({ emailAddress, onDone }: SignInOtpProps) => {
   );
 };
 
-export default SignInOtp;
+export default OtpForm;
