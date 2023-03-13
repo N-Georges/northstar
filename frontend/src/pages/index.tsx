@@ -1,7 +1,11 @@
 import Layout from "@/components/layouts/layout";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const { locale } = useRouter();
+  console.log(locale);
+
   return (
     <>
       <Layout>
@@ -12,6 +16,7 @@ export default function Home() {
             src="/images/sf.webp"
             width={1920}
             height={1080}
+            priority
             className="absolute inset-0 h-full w-full object-cover opacity-75 transition-opacity group-hover:opacity-50"
           />
 
