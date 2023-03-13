@@ -1,12 +1,11 @@
-import Image from "next/image";
 import { useAuth, useClerk, useUser } from "@clerk/nextjs";
 
 import Layout from "@/components/layouts";
-// import { GetServerSideProps } from "next";
-// import client from "@/clients/apollo-client";
-// import { gql } from "@apollo/client";
+import { GetServerSideProps } from "next";
+import client from "@/clients/apollo-client";
+import { gql } from "@apollo/client";
 
-export default function Home() {
+export default function Home({ users }: any) {
   const { signOut } = useClerk();
   const { user } = useUser();
   const { getToken } = useAuth();
@@ -19,7 +18,7 @@ export default function Home() {
       email
     }
   }`;
-  // console.log(users);
+  console.log(users);
 
   const makeQuery = async () => {
     try {
@@ -55,23 +54,23 @@ export default function Home() {
   );
 }
 
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const { data } = await client.query({
-//     query: gql`
-//       query MyQuery {
-//         users {
-//           id
-//           last_name
-//           first_name
-//           email
-//         }
-//       }
-//     `,
-//   });
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { data } = await client.query({
+    query: gql`
+      query MyQuery {
+        users {
+          id
+          last_name
+          first_name
+          email
+        }
+      }
+    `,
+  });
 
-//   return {
-//     props: {
-//       users: data.users,
-//     },
-//   };
-// };
+  return {
+    props: {
+      users: data.users,
+    },
+  };
+};
