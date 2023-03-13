@@ -1,11 +1,8 @@
 import { useAuth, useClerk, useUser } from "@clerk/nextjs";
 
 import Layout from "@/components/layouts";
-import { GetServerSideProps } from "next";
-import client from "@/clients/apollo-client";
-import { gql } from "@apollo/client";
 
-export default function Home({ users }: any) {
+export default function Home() {
   const { signOut } = useClerk();
   const { user } = useUser();
   const { getToken } = useAuth();
@@ -18,8 +15,6 @@ export default function Home({ users }: any) {
       email
     }
   }`;
-  console.log(users);
-
   const makeQuery = async () => {
     try {
       const response = await fetch(endpoint as string, {
@@ -53,24 +48,3 @@ export default function Home({ users }: any) {
     </>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { data } = await client.query({
-    query: gql`
-      query MyQuery {
-        users {
-          id
-          last_name
-          first_name
-          email
-        }
-      }
-    `,
-  });
-
-  return {
-    props: {
-      users: data.users,
-    },
-  };
-};

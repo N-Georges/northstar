@@ -51,7 +51,7 @@ const Header = () => {
                 width={40}
                 height={40}
               /> */}
-              <p className="ml-2 hidden text-left text-xs sm:block">
+              <p className="hidden text-left text-xs sm:block">
                 <strong className="block font-medium capitalize">{user?.fullName}</strong>
                 <span className="text-gray-500">{user?.emailAddresses[0].emailAddress}</span>
               </p>
