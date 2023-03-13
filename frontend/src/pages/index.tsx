@@ -2,20 +2,24 @@ import Image from "next/image";
 import { useAuth, useClerk, useUser } from "@clerk/nextjs";
 
 import Layout from "@/components/layouts";
+import { GetServerSideProps } from "next";
+import client from "@/clients/apollo-client";
+import { gql } from "@apollo/client";
 
-export default function Home() {
+export default function Home({ users }: { users: any }) {
   const { signOut } = useClerk();
   const { user } = useUser();
   const { getToken } = useAuth();
   const endpoint = process.env.NEXT_PUBLIC_HASURA_PROJECT_ENDPOINT;
   const query = `query MyQuery {
-    users(where: {id: {_eq: "c96c5f1d-6469-4927-a69f-1ba7322b557c"}}) {
+    users{
       id
       last_name
       first_name
       email
     }
   }`;
+  console.log(users);
 
   const makeQuery = async () => {
     try {
@@ -75,3 +79,24 @@ export default function Home() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { data } = await client.query({
+    query: gql`
+      query MyQuery {
+        users {
+          id
+          last_name
+          first_name
+          email
+        }
+      }
+    `,
+  });
+
+  return {
+    props: {
+      users: data.users,
+    },
+  };
+};
