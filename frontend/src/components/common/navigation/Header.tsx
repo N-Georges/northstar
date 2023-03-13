@@ -24,11 +24,7 @@ const Header = () => {
                 className="block shrink-0 rounded-lg bg-white p-2.5 text-gray-600 shadow-sm hover:text-gray-700"
               >
                 <span className="sr-only">Academy</span>
-                <MessageCircle
-                  className="h-5 w-5"
-                  strokeWidth={1.5}
-                  color={"black"}
-                />
+                <MessageCircle className="h-5 w-5" strokeWidth={1.5} color={"black"} />
               </a>
               <a
                 href="#"
@@ -38,15 +34,9 @@ const Header = () => {
                 <Bell className="h-5 w-5" strokeWidth={1.5} color={"black"} />
               </a>
             </div>
-            <span
-              aria-hidden="true"
-              className="hidden sm:block h-6 w-px rounded-full bg-gray-200"
-            ></span>
+            <span aria-hidden="true" className="hidden sm:block h-6 w-px rounded-full bg-gray-200"></span>
           </div>
-          <button
-            type="button"
-            className="group flex shrink-0 items-center rounded-lg transition"
-          >
+          <button type="button" className="group flex shrink-0 items-center rounded-lg transition">
             <span className="sr-only">Menu</span>
             <Image
               alt="Man"
@@ -63,12 +53,9 @@ const Header = () => {
           </button>
         </div>
         <div className="mt-8">
-          <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
-            Welcome Back, Barry!
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Welcome Back, Barry!</h1>
           <p className="mt-1.5 text-sm text-gray-500">
-            Explore the career opportunities available to you with our quick and
-            easy to use job search site! 🚀
+            Explore the career opportunities available to you with our quick and easy to use job search site! 🚀
           </p>
         </div>
       </div>

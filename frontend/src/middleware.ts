@@ -6,9 +6,7 @@ import type { NextRequest } from "next/server";
 const publicPaths = ["/", "/sign-in*", "/sign-up*"];
 
 const isPublic = (path: string) => {
-  return publicPaths.find((x) =>
-    path.match(new RegExp(`^${x}$`.replace("*$", "($|/)")))
-  );
+  return publicPaths.find((x) => path.match(new RegExp(`^${x}$`.replace("*$", "($|/)"))));
 };
 
 export default withClerkMiddleware((request: NextRequest) => {

@@ -89,11 +89,7 @@ const SignInForm = () => {
         )}
       </div>
       {formStep === SignInFormSteps.EMAIL && (
-        <form
-          onSubmit={handleSubmit(verifyEmail)}
-          noValidate
-          className="grid grid-cols-6 gap-6"
-        >
+        <form onSubmit={handleSubmit(verifyEmail)} noValidate className="grid grid-cols-6 gap-6">
           <div className="col-span-6">
             <Notice
               content="Don't have an account?"
@@ -104,10 +100,7 @@ const SignInForm = () => {
           </div>
           <div className="col-span-6 space-y-2">
             <div className="col-span-6">
-              <label
-                htmlFor="Email"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="Email" className="block text-sm font-medium text-gray-700">
                 Email
               </label>
 
@@ -135,10 +128,7 @@ const SignInForm = () => {
         </form>
       )}
       {formStep === SignInFormSteps.CODE && (
-        <SignInOtp
-          onDone={signInComplete}
-          emailAddress={getValues("emailAddress")}
-        />
+        <SignInOtp onDone={signInComplete} emailAddress={getValues("emailAddress")} />
       )}
     </>
   );

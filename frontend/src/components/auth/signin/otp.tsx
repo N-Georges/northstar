@@ -26,9 +26,7 @@ const SignInOtp = ({ emailAddress, onDone }: SignInOtpProps) => {
     return null;
   }
 
-  const verifySignInOtp: SubmitHandler<{ code: string }> = async function ({
-    code,
-  }) {
+  const verifySignInOtp: SubmitHandler<{ code: string }> = async function ({ code }) {
     try {
       setIsLoading(true);
       const signInAttempt = await signIn.attemptFirstFactor({
@@ -66,20 +64,14 @@ const SignInOtp = ({ emailAddress, onDone }: SignInOtpProps) => {
           <div className="text-2xl font-semibold text-gray-700 md:text-3xl">
             <p>Email Verification</p>
           </div>
-          <VerifyOtpNotice
-            emailAddress={emailAddress}
-            onResendClick={resendSignInOtp}
-          />
+          <VerifyOtpNotice emailAddress={emailAddress} onResendClick={resendSignInOtp} />
         </div>
       </div>
 
       <div>
         <div className="flex flex-col space-y-2">
           <div>
-            <label
-              htmlFor="Code"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="Code" className="block text-sm font-medium text-gray-700">
               Code
             </label>
 
@@ -90,9 +82,7 @@ const SignInOtp = ({ emailAddress, onDone }: SignInOtpProps) => {
               className="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
             />
             {errors.code && (
-              <span className="text-xs text-red-500 transition-all delay-300 ease-out">
-                {errors.code.message}
-              </span>
+              <span className="text-xs text-red-500 transition-all delay-300 ease-out">{errors.code.message}</span>
             )}
           </div>
 

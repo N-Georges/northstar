@@ -21,8 +21,7 @@ const VerifyOtpNotice = ({
     <>
       <div className="flex flex-row text-xs text-gray-500 md:text-sm">
         <p>
-          Enter the 6-digit code sent to{" "}
-          <span className=" text-gray-700">{emailAddress || "email"}</span>
+          Enter the 6-digit code sent to <span className=" text-gray-700">{emailAddress || "email"}</span>
         </p>
       </div>
       <div className="flex flex-row items-center justify-start space-x-1 text-center text-xs text-gray-500 md:text-sm">

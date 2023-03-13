@@ -2,11 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
-export function AuthLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}): JSX.Element {
+export function AuthLayout({ children }: { children: React.ReactNode }): JSX.Element {
   const router = useRouter();
   const { asPath } = router;
   const signup = asPath.includes("sign-up");
@@ -26,12 +22,7 @@ export function AuthLayout({
           <div className="hidden lg:relative lg:block lg:p-12">
             <Link className="block" href="/">
               <span className="sr-only">Home</span>
-              <Image
-                src="/images/logo.webp"
-                alt="Brand Logo Of Northstar"
-                width={60}
-                height={60}
-              />
+              <Image src="/images/logo.webp" alt="Brand Logo Of Northstar" width={60} height={60} />
             </Link>
 
             <h2 className="mt-6 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
@@ -40,10 +31,8 @@ export function AuthLayout({
             </h2>
 
             <p className="mt-4 leading-relaxed text-white/90">
-              {signin &&
-                `Welcome back! Please sign in to your Northstar account to continue your job search.`}
-              {signup &&
-                "Create your Northstar account today and find your job adapted to your profile"}
+              {signin && `Welcome back! Please sign in to your Northstar account to continue your job search.`}
+              {signup && "Create your Northstar account today and find your job adapted to your profile"}
             </p>
           </div>
         </section>
@@ -59,12 +48,7 @@ export function AuthLayout({
               >
                 <span className="sr-only">Home</span>
                 <div>
-                  <Image
-                    src="/images/logo.webp"
-                    alt="Brand Logo Of Northstar"
-                    width={40}
-                    height={40}
-                  />
+                  <Image src="/images/logo.webp" alt="Brand Logo Of Northstar" width={40} height={40} />
                 </div>
               </Link>
 
@@ -74,10 +58,8 @@ export function AuthLayout({
               </h1>
 
               <p className="text-xs leading-relaxed text-gray-500 md:mt-4 md:text-base">
-                {signin &&
-                  `Welcome back! Please sign in to your Northstar account to continue your job search.`}
-                {signup &&
-                  "Create your Northstar account today and find your job adapted to your profile"}
+                {signin && `Welcome back! Please sign in to your Northstar account to continue your job search.`}
+                {signup && "Create your Northstar account today and find your job adapted to your profile"}
               </p>
             </div>
             {children}

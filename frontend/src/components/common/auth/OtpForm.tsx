@@ -5,13 +5,7 @@ import { APIResponseError, parseError } from "../../../utils/errors";
 import Loading from "../Loading";
 import VerifyOtpNotice from "./VerifyOtpNotice";
 
-const OtpForm = ({
-  emailAddress,
-  onDone,
-}: {
-  emailAddress: string;
-  onDone: (sessionId: string) => void;
-}) => {
+const OtpForm = ({ emailAddress, onDone }: { emailAddress: string; onDone: (sessionId: string) => void }) => {
   const { isLoaded, signUp } = useSignUp();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -26,9 +20,7 @@ const OtpForm = ({
     return null;
   }
 
-  const verifyOtpCode: SubmitHandler<{ code: string }> = async function ({
-    code,
-  }) {
+  const verifyOtpCode: SubmitHandler<{ code: string }> = async function ({ code }) {
     try {
       setIsLoading(true);
       const signUpAttempt = await signUp.attemptEmailAddressVerification({
@@ -59,20 +51,14 @@ const OtpForm = ({
           <div className="text-2xl font-semibold text-gray-700 md:text-3xl">
             <p>Email Verification</p>
           </div>
-          <VerifyOtpNotice
-            emailAddress={emailAddress}
-            onResendClick={resendOtpCode}
-          />
+          <VerifyOtpNotice emailAddress={emailAddress} onResendClick={resendOtpCode} />
         </div>
       </div>
 
       <div>
         <div className="flex flex-col space-y-2">
           <div>
-            <label
-              htmlFor="Code"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="Code" className="block text-sm font-medium text-gray-700">
               Code
             </label>
 
@@ -84,9 +70,7 @@ const OtpForm = ({
               className="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
             />
             {errors.code && (
-              <span className="text-xs text-red-500 transition-all delay-300 ease-out">
-                {errors.code.message}
-              </span>
+              <span className="text-xs text-red-500 transition-all delay-300 ease-out">{errors.code.message}</span>
             )}
           </div>
 
