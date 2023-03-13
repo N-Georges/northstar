@@ -12,9 +12,7 @@ const Header = () => {
       <div className="max-w-screen-5xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex items-center sm:justify-between sm:gap-4">
           <Link href="/" className="flex cursor-pointer items-center">
-            <div className="relative h-10 w-10 sm:h-12 sm:w-12 ">
-              <Image src="/images/logo.webp" alt="Brand Logo Northstar" fill />
-            </div>
+            <Image src="/images/logo.webp" alt="Brand Logo Northstar" width={45} height={45} />
             <div className="hidden text-sm font-bold leading-4 text-gray-900 sm:block">
               <p>NORTHSTAR</p>
               <p>TALENT</p>
@@ -24,14 +22,14 @@ const Header = () => {
             <div className="gap-4 hidden sm:flex">
               <a
                 href="#"
-                className="block shrink-0 rounded-lg bg-white p-2.5 text-gray-600 shadow-sm hover:text-gray-700"
+                className="block shrink-0 rounded-lg bg-white p-3 text-gray-600 shadow-sm hover:text-gray-700"
               >
                 <span className="sr-only">Academy</span>
                 <MessageCircle className="h-5 w-5" strokeWidth={1.5} color={"black"} />
               </a>
               <a
                 href="#"
-                className="block shrink-0 rounded-lg bg-white p-2.5 text-gray-600 shadow-sm hover:text-gray-700"
+                className="block shrink-0 rounded-lg bg-white p-3 text-gray-600 shadow-sm hover:text-gray-700"
               >
                 <span className="sr-only">Notifications</span>
                 <Bell className="h-5 w-5" strokeWidth={1.5} color={"black"} />
@@ -42,13 +40,17 @@ const Header = () => {
           {session ? (
             <button type="button" className="group flex shrink-0 items-center rounded-lg transition">
               <span className="sr-only">Menu</span>
-              <Image
+              <div className="w-10 h-10 sm:hidden relative flex justify-center items-center rounded-full bg-red-500 text-xl text-white uppercase">
+                {user?.firstName?.charAt(0)}
+                {user?.lastName?.charAt(0)}
+              </div>
+              {/* <Image
                 alt="Man"
                 src={user?.profileImageUrl || ""}
                 className="h-10 w-10 rounded-lg object-cover"
                 width={40}
                 height={40}
-              />
+              /> */}
               <p className="ml-2 hidden text-left text-xs sm:block">
                 <strong className="block font-medium capitalize">{user?.fullName}</strong>
                 <span className="text-gray-500">{user?.emailAddresses[0].emailAddress}</span>

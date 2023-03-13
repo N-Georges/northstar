@@ -5,42 +5,12 @@ import { useSignUp } from "@clerk/nextjs";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
-type SignUpInputs = {
-  emailAddress?: string;
-  firstName?: string;
-  lastName?: string;
-  phone?: string;
-  city?: string;
-  country?: string;
-};
-type CompanySignUpInputs = {
-  emailAddress?: string;
-  name?: string;
-  address?: string;
-  phone?: string;
-  city?: string;
-  size?: string;
-  country?: string;
-};
-
-type InputProps = SignUpInputs & CompanySignUpInputs;
-
-type SignUpCodeProps = InputProps & {
+type SignUpCodeProps = {
+  emailAddress: string;
   onDone: (sessionId: string) => void;
 };
 
-const SignupCode = ({
-  emailAddress,
-  firstName,
-  lastName,
-  phone,
-  city,
-  country,
-  name,
-  address,
-  size,
-  onDone,
-}: SignUpCodeProps) => {
+const SignupCode = ({ emailAddress, onDone }: SignUpCodeProps) => {
   const { isLoaded, signUp } = useSignUp();
   const [isLoading, setIsLoading] = useState(false);
   const {

@@ -17,6 +17,7 @@ type SignUpInputs = {
   emailAddress: string;
   phone: string;
   locale: string;
+  role: string;
   clerkError?: string;
 };
 
@@ -40,13 +41,13 @@ const SignupForm = () => {
     formState: { errors },
     watch,
     clearErrors,
-  } = useForm<SignUpInputs>({ defaultValues: { locale: userLocale } });
+  } = useForm<SignUpInputs>({ defaultValues: { locale: userLocale, role: "applicant" } });
 
   if (!isLoaded) {
     return null;
   }
 
-  const onSubmit: SubmitHandler<SignUpInputs> = async ({ firstName, lastName, emailAddress, locale, phone }) => {
+  const onSubmit: SubmitHandler<SignUpInputs> = async ({ firstName, lastName, emailAddress, locale, phone, role }) => {
     try {
       setIsLoading(true);
       const signUpAttempt = await signUp.create({
@@ -56,6 +57,7 @@ const SignupForm = () => {
         unsafeMetadata: {
           locale,
           phone,
+          role,
         },
       });
       await signUpAttempt.prepareEmailAddressVerification();
@@ -199,14 +201,7 @@ const SignupForm = () => {
         </form>
       )}
       {formStep === SignUpFormSteps.CODE && (
-        <SignupCode
-          emailAddress={getValues("emailAddress")}
-          firstName={getValues("firstName")}
-          lastName={getValues("lastName")}
-          phone={getValues("phone")}
-          country={getValues("locale")}
-          onDone={signUpComplete}
-        />
+        <SignupCode emailAddress={getValues("emailAddress")} onDone={signUpComplete} />
       )}
     </AuthLayout>
   );
