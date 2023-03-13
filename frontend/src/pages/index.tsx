@@ -1,6 +1,6 @@
-import Layout from "@/components/layouts/layout";
 import Image from "next/image";
 import { useClerk, useUser } from "@clerk/clerk-react";
+import Layout from "@/components/layouts";
 
 export default function Home() {
   const { signOut } = useClerk();

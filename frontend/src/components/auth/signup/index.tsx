@@ -10,16 +10,19 @@ import Terms from "./terms";
 import Loading from "@/components/common/Loading";
 import SignupCode from "./code";
 import { AuthLayout } from "@/components/layouts/AuthLayout";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-type SignUpInputs = {
-  firstName: string;
-  lastName: string;
-  emailAddress: string;
-  phone: string;
-  locale: string;
-  role: string;
-  clerkError?: string;
-};
+const formSchema = z.object({
+  firstName: z.string().min(1, "firstname is required").max(25),
+  lastName: z.string().min(1, "lastname is required").max(25),
+  emailAddress: z.string().email("Invalid email").min(1, "Email is required"),
+  phone: z.string().min(1, "Phone is required"),
+  locale: z.string().min(1, "Locale is required"),
+  role: z.string().min(1, "Role is required"),
+});
+
+type FormSchemaType = z.infer<typeof formSchema> & { clerkError?: string };
 
 enum SignUpFormSteps {
   FORM,
@@ -27,7 +30,6 @@ enum SignUpFormSteps {
 }
 
 const SignupForm = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const [formStep, setFormStep] = useState(SignUpFormSteps.FORM);
   const { isLoaded, setSession, signUp } = useSignUp();
   const router = useRouter();
@@ -38,18 +40,27 @@ const SignupForm = () => {
     handleSubmit,
     getValues,
     setError,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     watch,
     clearErrors,
-  } = useForm<SignUpInputs>({ defaultValues: { locale: userLocale, role: "applicant" } });
+  } = useForm<FormSchemaType>({
+    resolver: zodResolver(formSchema),
+    defaultValues: { locale: userLocale, role: "applicant" },
+  });
 
   if (!isLoaded) {
     return null;
   }
 
-  const onSubmit: SubmitHandler<SignUpInputs> = async ({ firstName, lastName, emailAddress, locale, phone, role }) => {
+  const onSubmit: SubmitHandler<FormSchemaType> = async ({
+    firstName,
+    lastName,
+    emailAddress,
+    locale,
+    phone,
+    role,
+  }) => {
     try {
-      setIsLoading(true);
       const signUpAttempt = await signUp.create({
         emailAddress,
         lastName,
@@ -67,8 +78,6 @@ const SignupForm = () => {
         type: "manual",
         message: parseError(err as APIResponseError),
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -90,7 +99,7 @@ const SignupForm = () => {
         )}
       </div>
       {formStep === SignUpFormSteps.FORM && (
-        <form onSubmit={handleSubmit(onSubmit)} noValidate className="mt-8 grid grid-cols-6 gap-6">
+        <form onSubmit={handleSubmit(onSubmit)} noValidate className="grid grid-cols-6 gap-6">
           <div className="col-span-6 space-y-2">
             {errors.clerkError?.message && (
               <AnimatePresence>
@@ -125,25 +134,35 @@ const SignupForm = () => {
           </div>
 
           <div className="col-span-6 sm:col-span-3">
-            <label htmlFor="FirstName" className="block text-sm font-medium text-gray-700">
-              First Name
-            </label>
-
+            <div className="flex items-center justify-between">
+              <label htmlFor="FirstName" className="block text-sm font-medium text-gray-700">
+                First Name
+              </label>
+              {errors.firstName && (
+                <span className="text-xs text-red-500 transition-all delay-300 ease-out">
+                  {errors.firstName.message}
+                </span>
+              )}
+            </div>
             <input
               type="text"
               id="FirstName"
               {...register("firstName")}
               className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
             />
-            {errors.firstName && (
-              <span className="text-xs text-red-500 transition-all delay-300 ease-out">{errors.firstName.message}</span>
-            )}
           </div>
 
           <div className="col-span-6 sm:col-span-3">
-            <label htmlFor="LastName" className="block text-sm font-medium text-gray-700">
-              Last Name
-            </label>
+            <div className="flex items-center justify-between">
+              <label htmlFor="LastName" className="block text-sm font-medium text-gray-700">
+                Last Name
+              </label>
+              {errors.lastName && (
+                <span className="text-xs text-red-500 transition-all delay-300 ease-out">
+                  {errors.lastName.message}
+                </span>
+              )}
+            </div>
 
             <input
               type="text"
@@ -151,51 +170,48 @@ const SignupForm = () => {
               {...register("lastName")}
               className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
             />
-            {errors.lastName && (
-              <span className="text-xs text-red-500 transition-all delay-300 ease-out">{errors.lastName.message}</span>
-            )}
           </div>
           <div className="col-span-6">
-            <label htmlFor="Phone" className="block text-sm font-medium text-gray-700">
-              Phone
-            </label>
-
+            <div className="flex items-center justify-between">
+              <label htmlFor="Phone" className="block text-sm font-medium text-gray-700">
+                Phone
+              </label>
+              {errors.phone && (
+                <span className="text-xs text-red-500 transition-all delay-300 ease-out">{errors.phone.message}</span>
+              )}
+            </div>
             <input
               type="tel"
               id="Phone"
               {...register("phone")}
               className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
             />
-            {errors.emailAddress && (
-              <span className="text-xs text-red-500 transition-all delay-300 ease-out">
-                {errors.emailAddress.message}
-              </span>
-            )}
           </div>
           <div className="col-span-6">
-            <label htmlFor="Email" className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
-
+            <div className="flex items-center justify-between">
+              <label htmlFor="Email" className="block text-sm font-medium text-gray-700">
+                Email
+              </label>
+              {errors.emailAddress && (
+                <span className="text-xs text-red-500 transition-all delay-300 ease-out">
+                  {errors.emailAddress.message}
+                </span>
+              )}
+            </div>
             <input
               type="email"
               id="Email"
               {...register("emailAddress")}
               className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
             />
-            {errors.emailAddress && (
-              <span className="text-xs text-red-500 transition-all delay-300 ease-out">
-                {errors.emailAddress.message}
-              </span>
-            )}
           </div>
           <Terms />
           <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
             <button
-              disabled={isLoading || !!Object.keys(errors).length}
+              disabled={isSubmitting}
               className="inline-block w-full items-center justify-center rounded-md bg-blue-600 px-12 py-2 text-sm font-medium text-white"
             >
-              {isLoading ? <Loading /> : "Sign up"}
+              {isSubmitting ? <Loading /> : "Sign up"}
             </button>
           </div>
         </form>

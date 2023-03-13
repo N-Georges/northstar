@@ -6,13 +6,18 @@ import Loading from "@/components/common/Loading";
 import Notice from "@/components/common/auth/Notice";
 import { useForm } from "react-hook-form";
 import { APIResponseError, parseError } from "@/utils/errors";
-import { ArrowNarrowLeft, KeyOff } from "tabler-icons-react";
+import { AlertCircle, ArrowNarrowLeft, KeyOff } from "tabler-icons-react";
 import SignInCode from "./code";
 import { AuthLayout } from "@/components/layouts/AuthLayout";
+import { AnimatePresence, motion } from "framer-motion";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-type SignInInputs = {
-  emailAddress: string;
-};
+const formSchema = z.object({
+  emailAddress: z.string().email("Invalid email").min(1, "Email is required"),
+});
+
+type FormSchemaType = z.infer<typeof formSchema> & { clerkError?: string };
 
 export enum SignInFormSteps {
   EMAIL,
@@ -22,18 +27,19 @@ export enum SignInFormSteps {
 const SignInForm = () => {
   const { isLoaded, signIn, setSession } = useSignIn();
   const router = useRouter();
-  const [firstName, setFirstName] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const [formStep, setFormStep] = useState(SignInFormSteps.EMAIL);
-  localStorage.setItem("firstName", firstName);
   const {
     register,
     handleSubmit,
     setError,
     getValues,
-    formState: { errors },
-  } = useForm<SignInInputs>();
+    formState: { errors, isSubmitting },
+    watch,
+    clearErrors,
+  } = useForm<FormSchemaType>({
+    resolver: zodResolver(formSchema),
+  });
 
   if (!isLoaded) {
     return null;
@@ -49,7 +55,6 @@ const SignInForm = () => {
       (factor: { strategy: string }) => factor.strategy === "email_code"
     ) as EmailCodeFactor;
 
-    setFirstName(signInAttempt.userData.firstName || "");
     await signInAttempt.prepareFirstFactor({
       strategy: "email_code",
       emailAddressId: emailCodeFactor.emailAddressId,
@@ -58,18 +63,17 @@ const SignInForm = () => {
 
   const verifyEmail = async function () {
     try {
-      setIsLoading(true);
       await sendSignInCode();
       setFormStep(SignInFormSteps.CODE);
     } catch (err) {
-      setError("emailAddress", {
+      setError("clerkError", {
         type: "manual",
         message: parseError(err as APIResponseError),
       });
-    } finally {
-      setIsLoading(false);
     }
   };
+  /** Clerk API related errors on change. */
+  watch(() => errors.clerkError && clearErrors("clerkError"));
 
   const signInComplete = async (createdSessionId: string) => {
     /** Couldn't the signin be updated and have the createdSessionId ? */
@@ -91,19 +95,51 @@ const SignInForm = () => {
       </div>
       {formStep === SignInFormSteps.EMAIL && (
         <form onSubmit={handleSubmit(verifyEmail)} noValidate className="grid grid-cols-6 gap-6">
-          <div className="col-span-6">
-            <Notice
-              content="Don't have an account?"
-              actionLink="/sign-up"
-              actionMessage="Sign up"
-              icon={<KeyOff height={18} />}
-            />
+          <div className="col-span-6 space-y-2">
+            {errors.clerkError?.message && (
+              <AnimatePresence>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2, delay: 0.2, ease: "easeIn" }}
+                  role="error alert"
+                  aria-labelledby="error-label"
+                  className="col-span-6 ease-in-out"
+                >
+                  <div className="flex items-center space-x-2 rounded-md bg-gray-50 p-4 text-xs leading-4">
+                    <AlertCircle height={18} className="text-red-500" />
+                    <div className="flex items-center space-x-1">
+                      <span className="text-xs text-red-500  transition-all delay-300 ease-out">
+                        {errors.clerkError.message}
+                      </span>
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            )}
+            <div className="col-span-6">
+              <Notice
+                content="Don't have an account?"
+                actionLink="/sign-up"
+                actionMessage="Sign up"
+                icon={<KeyOff height={18} />}
+              />
+            </div>
           </div>
+
           <div className="col-span-6 space-y-2">
             <div className="col-span-6">
-              <label htmlFor="Email" className="block text-sm font-medium text-gray-700">
-                Email
-              </label>
+              <div className="flex items-center justify-between">
+                <label htmlFor="Email" className="block text-sm font-medium text-gray-700">
+                  Email
+                </label>
+                {errors.emailAddress && (
+                  <span className="text-xs text-red-500 transition-all delay-300 ease-out">
+                    {errors.emailAddress.message}
+                  </span>
+                )}
+              </div>
 
               <input
                 type="email"
@@ -111,18 +147,13 @@ const SignInForm = () => {
                 {...register("emailAddress")}
                 className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
               />
-              {errors.emailAddress && (
-                <span className="text-xs text-red-500 transition-all delay-300 ease-out">
-                  {errors.emailAddress.message}
-                </span>
-              )}
             </div>
             <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
               <button
-                disabled={isLoading || !!Object.keys(errors).length}
+                disabled={isSubmitting || !!Object.keys(errors).length}
                 className="inline-block w-full items-center justify-center rounded-md bg-blue-600 px-12 py-2 text-sm font-medium text-white"
               >
-                {isLoading ? <Loading /> : "Sign in"}
+                {isSubmitting ? <Loading /> : "Sign in"}
               </button>
             </div>
           </div>

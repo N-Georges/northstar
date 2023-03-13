@@ -71,9 +71,14 @@ const SignInCode = ({ emailAddress, onDone }: SignInCodeProps) => {
       <div>
         <div className="flex flex-col space-y-2">
           <div>
-            <label htmlFor="Code" className="block text-sm font-medium text-gray-700">
-              Code
-            </label>
+            <div className="flex items-center justify-between">
+              <label htmlFor="Code" className="block text-sm font-medium text-gray-700">
+                Code
+              </label>
+              {errors.code && (
+                <span className="text-xs text-red-500 transition-all delay-300 ease-out">{errors.code.message}</span>
+              )}
+            </div>
 
             <input
               type="text"
@@ -81,9 +86,6 @@ const SignInCode = ({ emailAddress, onDone }: SignInCodeProps) => {
               {...register("code")}
               className="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
             />
-            {errors.code && (
-              <span className="text-xs text-red-500 transition-all delay-300 ease-out">{errors.code.message}</span>
-            )}
           </div>
 
           <div className="flex flex-col space-y-5">
@@ -91,7 +93,7 @@ const SignInCode = ({ emailAddress, onDone }: SignInCodeProps) => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className={`inline-block w-full items-center justify-center rounded-md bg-blue-600 px-12 py-3 text-sm font-medium text-white`}
+                className={`inline-block w-full items-center justify-center rounded-md bg-blue-600 px-12 py-2 text-sm font-medium text-white`}
               >
                 {isLoading ? <Loading /> : "Verify code"}
               </button>

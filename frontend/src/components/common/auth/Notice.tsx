@@ -17,7 +17,7 @@ const Notice = ({
       <div className="flex items-center space-x-1">
         <span className="">{content}</span>
         <Link href={actionLink}>
-          <p className="text-blue-600 underline">{actionMessage}</p>
+          <p className="text-blue-600 hover:underline">{actionMessage}</p>
         </Link>
       </div>
     </div>
