@@ -1,15 +1,18 @@
 import Layout from "@/components/layouts/layout";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useClerk, useUser } from "@clerk/clerk-react";
 
 export default function Home() {
-  const { locale } = useRouter();
-  console.log(locale);
+  const { signOut } = useClerk();
+  const { user } = useUser();
 
   return (
     <>
       <Layout>
-        <h1 className="text-3xl font-bold underline">Hello world</h1>
+        <button className="text-3xl font-bold underline" onClick={() => signOut()}>
+          Sign out
+        </button>
+        <div>Hello {user?.firstName}</div>
         <a href="#" className="group relative block bg-black">
           <Image
             alt="Developer"

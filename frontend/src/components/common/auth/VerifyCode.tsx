@@ -1,20 +1,20 @@
 import { useState } from "react";
 
-const VerifyOtpNotice = ({
+const VerifyCode = ({
   emailAddress,
   onResendClick,
 }: {
   emailAddress: string;
   onResendClick: () => void;
 }): JSX.Element => {
-  const [resendOtpDisabled, setResendOtpDisabled] = useState(false);
+  const [resendCodeDisabled, setResendCodeDisabled] = useState(false);
 
   const handleResendClick = async function () {
     try {
-      setResendOtpDisabled(true);
+      setResendCodeDisabled(true);
       onResendClick();
     } finally {
-      setResendOtpDisabled(false);
+      setResendCodeDisabled(false);
     }
   };
   return (
@@ -28,7 +28,7 @@ const VerifyOtpNotice = ({
         <p>Didn&apos;t recieve code?</p>
         <button
           type="button"
-          disabled={resendOtpDisabled}
+          disabled={resendCodeDisabled}
           onClick={handleResendClick}
           className="flex flex-row items-center text-blue-600 hover:underline "
         >
@@ -39,4 +39,4 @@ const VerifyOtpNotice = ({
   );
 };
 
-export default VerifyOtpNotice;
+export default VerifyCode;

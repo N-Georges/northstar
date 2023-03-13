@@ -2,16 +2,16 @@ import { useSignIn } from "@clerk/nextjs";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { EmailCodeFactor } from "@clerk/types";
-import VerifyOtpNotice from "@/components/common/auth/VerifyOtpNotice";
 import { APIResponseError, parseError } from "@/utils/errors";
 import Loading from "@/components/common/Loading";
+import VerifyCode from "@/components/common/auth/VerifyCode";
 
-type SignInOtpProps = {
+type SignInCodeProps = {
   emailAddress: string;
   onDone: (sessionId: string) => void;
 };
 
-const SignInOtp = ({ emailAddress, onDone }: SignInOtpProps) => {
+const SignInCode = ({ emailAddress, onDone }: SignInCodeProps) => {
   const { isLoaded, signIn } = useSignIn();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -26,7 +26,7 @@ const SignInOtp = ({ emailAddress, onDone }: SignInOtpProps) => {
     return null;
   }
 
-  const verifySignInOtp: SubmitHandler<{ code: string }> = async function ({ code }) {
+  const verifySignInCode: SubmitHandler<{ code: string }> = async function ({ code }) {
     try {
       setIsLoading(true);
       const signInAttempt = await signIn.attemptFirstFactor({
@@ -46,7 +46,7 @@ const SignInOtp = ({ emailAddress, onDone }: SignInOtpProps) => {
     }
   };
 
-  const resendSignInOtp = async function () {
+  const resendSignInCode = async function () {
     const emailCodeFactor = signIn.supportedFirstFactors.find(
       (factor) => factor.strategy === "email_code"
     ) as EmailCodeFactor;
@@ -58,13 +58,13 @@ const SignInOtp = ({ emailAddress, onDone }: SignInOtpProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(verifySignInOtp)} className="space-y-5">
+    <form onSubmit={handleSubmit(verifySignInCode)} className="space-y-5">
       <div>
         <div className="flex flex-col space-y-2">
           <div className="text-2xl font-semibold text-gray-700 md:text-3xl">
             <p>Email Verification</p>
           </div>
-          <VerifyOtpNotice emailAddress={emailAddress} onResendClick={resendSignInOtp} />
+          <VerifyCode emailAddress={emailAddress} onResendClick={resendSignInCode} />
         </div>
       </div>
 
@@ -77,7 +77,7 @@ const SignInOtp = ({ emailAddress, onDone }: SignInOtpProps) => {
 
             <input
               type="text"
-              id="otp"
+              id="code"
               {...register("code")}
               className="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
             />
@@ -103,4 +103,4 @@ const SignInOtp = ({ emailAddress, onDone }: SignInOtpProps) => {
   );
 };
 
-export default SignInOtp;
+export default SignInCode;

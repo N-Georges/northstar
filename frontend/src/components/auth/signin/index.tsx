@@ -7,7 +7,8 @@ import Notice from "@/components/common/auth/Notice";
 import { useForm } from "react-hook-form";
 import { APIResponseError, parseError } from "@/utils/errors";
 import { ArrowNarrowLeft, KeyOff } from "tabler-icons-react";
-import SignInOtp from "./otp";
+import SignInCode from "./code";
+import { AuthLayout } from "@/components/layouts/AuthLayout";
 
 type SignInInputs = {
   emailAddress: string;
@@ -76,7 +77,7 @@ const SignInForm = () => {
   };
 
   return (
-    <>
+    <AuthLayout>
       <div className="col-span-6">
         {formStep !== SignInFormSteps.EMAIL && (
           <button
@@ -128,9 +129,9 @@ const SignInForm = () => {
         </form>
       )}
       {formStep === SignInFormSteps.CODE && (
-        <SignInOtp onDone={signInComplete} emailAddress={getValues("emailAddress")} />
+        <SignInCode onDone={signInComplete} emailAddress={getValues("emailAddress")} />
       )}
-    </>
+    </AuthLayout>
   );
 };
 

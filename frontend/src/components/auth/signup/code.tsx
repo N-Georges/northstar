@@ -1,14 +1,48 @@
+import Loading from "@/components/common/Loading";
+import VerifyCode from "@/components/common/auth/VerifyCode";
+import { APIResponseError, parseError } from "@/utils/errors";
 import { useSignUp } from "@clerk/nextjs";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { APIResponseError, parseError } from "../../../utils/errors";
-import Loading from "../Loading";
-import VerifyOtpNotice from "./VerifyOtpNotice";
 
-const OtpForm = ({ emailAddress, onDone }: { emailAddress: string; onDone: (sessionId: string) => void }) => {
+type SignUpInputs = {
+  emailAddress?: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  city?: string;
+  country?: string;
+};
+type CompanySignUpInputs = {
+  emailAddress?: string;
+  name?: string;
+  address?: string;
+  phone?: string;
+  city?: string;
+  size?: string;
+  country?: string;
+};
+
+type InputProps = SignUpInputs & CompanySignUpInputs;
+
+type SignUpCodeProps = InputProps & {
+  onDone: (sessionId: string) => void;
+};
+
+const SignupCode = ({
+  emailAddress,
+  firstName,
+  lastName,
+  phone,
+  city,
+  country,
+  name,
+  address,
+  size,
+  onDone,
+}: SignUpCodeProps) => {
   const { isLoaded, signUp } = useSignUp();
   const [isLoading, setIsLoading] = useState(false);
-
   const {
     register,
     handleSubmit,
@@ -20,15 +54,15 @@ const OtpForm = ({ emailAddress, onDone }: { emailAddress: string; onDone: (sess
     return null;
   }
 
-  const verifyOtpCode: SubmitHandler<{ code: string }> = async function ({ code }) {
+  const verifySignUpCode: SubmitHandler<{ code: string }> = async function ({ code }) {
     try {
       setIsLoading(true);
       const signUpAttempt = await signUp.attemptEmailAddressVerification({
         code,
       });
-
       if (signUpAttempt.status === "complete") {
         onDone(signUpAttempt.createdSessionId || "");
+        //  mutation pour enregistrer l'user
       }
     } catch (err) {
       setError("code", {
@@ -40,18 +74,17 @@ const OtpForm = ({ emailAddress, onDone }: { emailAddress: string; onDone: (sess
     }
   };
 
-  const resendOtpCode = async function () {
+  const resendSignUpCode = async function () {
     await signUp.prepareEmailAddressVerification();
   };
-
   return (
-    <form onSubmit={handleSubmit(verifyOtpCode)} className="space-y-5 pt-10">
+    <form onSubmit={handleSubmit(verifySignUpCode)} className="space-y-5 pt-10">
       <div>
         <div className="flex flex-col space-y-2">
           <div className="text-2xl font-semibold text-gray-700 md:text-3xl">
             <p>Email Verification</p>
           </div>
-          <VerifyOtpNotice emailAddress={emailAddress} onResendClick={resendOtpCode} />
+          <VerifyCode emailAddress={emailAddress || ""} onResendClick={resendSignUpCode} />
         </div>
       </div>
 
@@ -64,9 +97,8 @@ const OtpForm = ({ emailAddress, onDone }: { emailAddress: string; onDone: (sess
 
             <input
               type="text"
-              id="otp"
+              id="code"
               {...register("code")}
-              autoFocus
               className="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
             />
             {errors.code && (
@@ -91,4 +123,4 @@ const OtpForm = ({ emailAddress, onDone }: { emailAddress: string; onDone: (sess
   );
 };
 
-export default OtpForm;
+export default SignupCode;

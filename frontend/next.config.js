@@ -1,10 +1,12 @@
 /** @type {import('next').NextConfig} */
-const { i18n } = require("./next-i18next.config");
 const nextConfig = {
   reactStrictMode: true,
-  i18n,
+  i18n: {
+    locales: ["en", "fr-BE", "nl-BE"],
+    defaultLocale: "en",
+  },
   images: {
-    domains: ["images.unsplash.com"],
+    domains: ["images.unsplash.com", "www.gravatar.com"],
   },
 };
 

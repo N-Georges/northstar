@@ -1,15 +1,27 @@
 import SignInForm from "@/components/auth/signin";
-import { AuthLayout } from "@/components/layouts/AuthLayout";
 import { SignedOut } from "@clerk/nextjs";
+import { buildClerkProps, getAuth } from "@clerk/nextjs/server";
+import { GetServerSideProps } from "next";
 
 const SigninPage = () => {
   return (
-    <AuthLayout>
-      <SignedOut>
-        <SignInForm />
-      </SignedOut>
-    </AuthLayout>
+    <SignedOut>
+      <SignInForm />
+    </SignedOut>
   );
 };
 
 export default SigninPage;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { userId } = getAuth(ctx.req);
+  if (userId) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  return { props: { ...buildClerkProps(ctx.req) } };
+};

@@ -8,7 +8,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { AlertCircle, ArrowNarrowLeft, Key } from "tabler-icons-react";
 import Terms from "./terms";
 import Loading from "@/components/common/Loading";
-import SignupOtp from "./otp";
+import SignupCode from "./code";
+import { AuthLayout } from "@/components/layouts/AuthLayout";
 
 type SignUpInputs = {
   firstName: string;
@@ -29,6 +30,7 @@ const SignupForm = () => {
   const [formStep, setFormStep] = useState(SignUpFormSteps.FORM);
   const { isLoaded, setSession, signUp } = useSignUp();
   const router = useRouter();
+  const userLocale = router.locale;
 
   const {
     register,
@@ -38,7 +40,7 @@ const SignupForm = () => {
     formState: { errors },
     watch,
     clearErrors,
-  } = useForm<SignUpInputs>({ defaultValues: { locale: "fr-BE" } });
+  } = useForm<SignUpInputs>({ defaultValues: { locale: userLocale } });
 
   if (!isLoaded) {
     return null;
@@ -76,7 +78,7 @@ const SignupForm = () => {
     await setSession(createdSessionId, () => router.push("/"));
   };
   return (
-    <>
+    <AuthLayout>
       <div className="col-span-6">
         {formStep !== SignUpFormSteps.FORM && (
           <button className="flex items-center text-xs text-blue-500" onClick={() => setFormStep(SignUpFormSteps.FORM)}>
@@ -185,7 +187,6 @@ const SignupForm = () => {
               </span>
             )}
           </div>
-
           <Terms />
           <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
             <button
@@ -198,7 +199,7 @@ const SignupForm = () => {
         </form>
       )}
       {formStep === SignUpFormSteps.CODE && (
-        <SignupOtp
+        <SignupCode
           emailAddress={getValues("emailAddress")}
           firstName={getValues("firstName")}
           lastName={getValues("lastName")}
@@ -207,7 +208,7 @@ const SignupForm = () => {
           onDone={signUpComplete}
         />
       )}
-    </>
+    </AuthLayout>
   );
 };
 
