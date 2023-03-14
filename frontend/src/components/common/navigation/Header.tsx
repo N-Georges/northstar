@@ -1,8 +1,9 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MessageCircle, Bell, ChevronDown } from "tabler-icons-react";
+import { MessageCircle, Bell } from "tabler-icons-react";
 import { useClerk, useUser } from "@clerk/nextjs";
+import UserDropdown from "../UserDropdown";
 
 const Header = () => {
   const { user } = useUser();
@@ -38,25 +39,27 @@ const Header = () => {
             <span aria-hidden="true" className="hidden sm:block h-6 w-px rounded-full bg-gray-200"></span>
           </div>
           {session ? (
-            <button type="button" className="group flex shrink-0 items-center rounded-lg transition">
-              <span className="sr-only">Menu</span>
-              <div className="w-10 h-10 sm:hidden relative flex justify-center items-center rounded-full bg-red-500 text-xl text-white uppercase">
-                {user?.firstName?.charAt(0)}
-                {user?.lastName?.charAt(0)}
-              </div>
-              {/* <Image
-                alt="Man"
-                src={user?.profileImageUrl || ""}
-                className="h-10 w-10 rounded-lg object-cover"
-                width={40}
-                height={40}
-              /> */}
-              <p className="hidden text-left text-xs sm:block">
-                <strong className="block font-medium capitalize">{user?.fullName}</strong>
-                <span className="text-gray-500">{user?.emailAddresses[0].emailAddress}</span>
-              </p>
-              <ChevronDown className="ml-2 hidden sm:block h-4 w-4 text-gray-400 group-hover:text-gray-500" />
-            </button>
+            <>
+              <UserDropdown
+                firstName={user?.firstName}
+                lastName={user?.lastName}
+                fullName={user?.fullName}
+                emailAddress={user?.emailAddresses[0].emailAddress}
+              />
+              {/* <button type="button" className="group flex shrink-0 items-center rounded-lg transition">
+                <span className="sr-only">Menu</span>
+
+                <div className="w-10 h-10 sm:hidden relative flex justify-center items-center rounded-full bg-red-500 text-xl text-white uppercase">
+                  {user?.firstName?.charAt(0)}
+                  {user?.lastName?.charAt(0)}
+                </div>
+                <p className="hidden text-left text-xs sm:block">
+                  <strong className="block font-medium capitalize">{user?.fullName}</strong>
+                  <span className="text-gray-500">{user?.primaryEmailAddres}</span>
+                </p>
+                <ChevronDown className="ml-2 hidden sm:block h-4 w-4 text-gray-400 group-hover:text-gray-500" />
+              </button> */}
+            </>
           ) : (
             <Link href="/sign-in">
               <span className="text-gray-900">Connexion</span>
