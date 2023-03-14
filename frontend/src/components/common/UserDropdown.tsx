@@ -64,7 +64,7 @@ const UserDropdown = ({ firstName, lastName, fullName, emailAddress }: UserDropd
 
           <Link
             href="#"
-            className="flex items-center w-full gap-2 px-4 py-2 text-sm text-gray-500 rounded-lg hover:bg-gray-50 hover:text-gray-700"
+            className="flex items-center w-full gap-2 px-4 py-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-50 hover:text-gray-700"
             role="menuitem"
           >
             <Star className="w-5 h-5" />
@@ -76,22 +76,9 @@ const UserDropdown = ({ firstName, lastName, fullName, emailAddress }: UserDropd
             className="flex items-center w-full gap-2 px-4 py-2 text-sm text-gray-500 rounded-lg hover:bg-gray-50 hover:text-gray-700"
             role="menuitem"
           >
-            <Settings className="w-5 h-5" />
-            <span>Settings</span>
-          </Link>
-        </div>
-
-        <div className="p-2 sm:hidden">
-          <strong className="block p-2 text-xs font-medium text-gray-400 uppercase">Inbox</strong>
-          <Link
-            href="#"
-            className="flex items-center w-full gap-2 px-4 py-2 text-sm text-gray-500 rounded-lg hover:bg-gray-50 hover:text-gray-700"
-            role="menuitem"
-          >
             <MessageCircle className="w-5 h-5" />
             <span>Messages</span>
           </Link>
-
           <Link
             href="#"
             className="flex items-center w-full gap-2 px-4 py-2 text-sm text-gray-500 rounded-lg hover:bg-gray-50 hover:text-gray-700"
@@ -99,6 +86,14 @@ const UserDropdown = ({ firstName, lastName, fullName, emailAddress }: UserDropd
           >
             <Bell className="w-5 h-5" />
             <span>Notifications</span>
+          </Link>
+          <Link
+            href="#"
+            className="flex items-center w-full gap-2 px-4 py-2 text-sm text-gray-500 rounded-lg hover:bg-gray-50 hover:text-gray-700"
+            role="menuitem"
+          >
+            <Settings className="w-5 h-5" />
+            <span>Settings</span>
           </Link>
         </div>
 

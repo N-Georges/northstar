@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MessageCircle, Bell } from "tabler-icons-react";
+import { Bell, Star } from "tabler-icons-react";
 import { useClerk, useUser } from "@clerk/nextjs";
 import UserDropdown from "../UserDropdown";
 
@@ -10,33 +10,33 @@ const Header = () => {
   const { session } = useClerk();
   return (
     <header aria-label="Page Header" className="bg-gray-50">
-      <div className="max-w-screen-5xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+      <div className="px-4 py-8 mx-auto max-w-screen-5xl sm:px-6 lg:px-8">
         <div className="flex items-center sm:justify-between sm:gap-4">
-          <Link href="/" className="flex cursor-pointer items-center">
+          <Link href="/" className="flex items-center cursor-pointer">
             <Image src="/images/logo.webp" alt="Brand Logo Northstar" width={45} height={45} />
             <div className="hidden text-sm font-bold leading-4 text-gray-900 sm:block">
               <p>NORTHSTAR</p>
               <p>TALENT</p>
             </div>
           </Link>
-          <div className="flex flex-1 items-center gap-4 justify-end">
-            <div className="gap-4 hidden sm:flex">
-              <a
+          <div className="flex items-center justify-end flex-1 gap-4">
+            <div className="hidden gap-4 sm:flex">
+              <Link
                 href="#"
-                className="block shrink-0 rounded-lg bg-white p-3 text-gray-600 shadow-sm hover:text-gray-700"
+                className="block p-3 text-gray-600 bg-white rounded-lg shadow-sm shrink-0 hover:text-gray-700"
               >
-                <span className="sr-only">Academy</span>
-                <MessageCircle className="h-5 w-5" strokeWidth={1.5} color={"black"} />
-              </a>
-              <a
+                <span className="sr-only">Favorites</span>
+                <Star className="w-5 h-5" strokeWidth={1.5} color={"black"} />
+              </Link>
+              <Link
                 href="#"
-                className="block shrink-0 rounded-lg bg-white p-3 text-gray-600 shadow-sm hover:text-gray-700"
+                className="block p-3 text-gray-600 bg-white rounded-lg shadow-sm shrink-0 hover:text-gray-700"
               >
                 <span className="sr-only">Notifications</span>
-                <Bell className="h-5 w-5" strokeWidth={1.5} color={"black"} />
-              </a>
+                <Bell className="w-5 h-5" strokeWidth={1.5} color={"black"} />
+              </Link>
             </div>
-            <span aria-hidden="true" className="hidden sm:block h-6 w-px rounded-full bg-gray-200"></span>
+            <span aria-hidden="true" className="hidden w-px h-6 bg-gray-200 rounded-full sm:block"></span>
           </div>
           {session ? (
             <>
@@ -46,19 +46,6 @@ const Header = () => {
                 fullName={user?.fullName}
                 emailAddress={user?.emailAddresses[0].emailAddress}
               />
-              {/* <button type="button" className="group flex shrink-0 items-center rounded-lg transition">
-                <span className="sr-only">Menu</span>
-
-                <div className="w-10 h-10 sm:hidden relative flex justify-center items-center rounded-full bg-red-500 text-xl text-white uppercase">
-                  {user?.firstName?.charAt(0)}
-                  {user?.lastName?.charAt(0)}
-                </div>
-                <p className="hidden text-left text-xs sm:block">
-                  <strong className="block font-medium capitalize">{user?.fullName}</strong>
-                  <span className="text-gray-500">{user?.primaryEmailAddres}</span>
-                </p>
-                <ChevronDown className="ml-2 hidden sm:block h-4 w-4 text-gray-400 group-hover:text-gray-500" />
-              </button> */}
             </>
           ) : (
             <Link href="/sign-in">
@@ -67,7 +54,7 @@ const Header = () => {
           )}
         </div>
         <div className="mt-8">
-          <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl capitalize">Welcome Back, {user?.firstName}!</h1>
+          <h1 className="text-2xl font-bold text-gray-900 capitalize sm:text-3xl">Welcome Back, {user?.firstName}!</h1>
           <p className="mt-1.5 text-sm text-gray-500">
             Explore the career opportunities available to you with our quick and easy to use job search site! 🚀
           </p>
